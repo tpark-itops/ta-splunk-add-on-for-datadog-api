@@ -353,7 +353,6 @@ def collect_events(helper, ew):
                         done=True,
                         unbroken=True,
                     )
-                    ew.write_event(event)
                     ew.write_event(splunk_event)                    
 
                     # save checkpoint for every event
