@@ -335,8 +335,15 @@ def collect_events(helper, ew):
                     pass
 
                 try:
-                    event_time = event["date_happened"]
-                    event = helper.new_event(
+                    event_time = event.get("date_happened")
+
+                    # Collect tags
+                    tags = event.get("tags", []) or []
+                    event["tags"] = tags
+                    event["tags_str"] = ",".join(tags)
+
+                    # new event variable - splunk_event
+                    splunk_event = helper.new_event(
                         json.dumps(event),
                         time=event_time,
                         host=None,
@@ -347,6 +354,7 @@ def collect_events(helper, ew):
                         unbroken=True,
                     )
                     ew.write_event(event)
+                    ew.write_event(splunk_event)                    
 
                     # save checkpoint for every event
                     timestamp = helper.get_check_point(last_ran_key)
